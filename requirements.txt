@@ -4,3 +4,4 @@ opencv-python
 pyaudio
 pillow
 mss
+python-dotenv

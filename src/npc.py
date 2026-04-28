@@ -1,3 +1,5 @@
+from google import genai
+
 class NPC:
     """
     A NPC powered by an omni modal LLM.
@@ -18,18 +20,22 @@ class NPC:
     """
     def __init__(
             self,
-            model_api_baseurl: str,
             model_api_key: str,
-            npc_directory: str = ".",
+            language: str,
+            model_name: str = "models/gemini-3.1-flash-live-preview",
+            npc_directory: str = "./test_npc",
     ):
         self.language = language
         self.npc_directory = npc_directory
-        self.model_api_baseurl = model_api_baseurl
-        self.model_api_key = model_api_key
+        self.model_name = model_name
+        self.client = genai.Client(
+            http_options={"api_version": "v1beta"},
+            api_key=model_api_key,
+        )
 
     def _update_memory(self, conversation: list[dict]) -> None:
         """
-        Updates the memory of the NPC based on the conversation and the existing MEMORIES.md.
+        Updates the mem0 memories database.
 
         :param conversation: The messages of the last completed conversation between the player
         and the NPC. The conversation parameter is a OpenAI compliant messages list.
