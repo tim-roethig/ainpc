@@ -9,7 +9,7 @@ class NPC:
     1. A SYSTEM.md file that contains the agents system prompt containing information about the
     world, the location, the character, the voice and the goal of the NPC.
     2. A EVENTS.md file that describes important events that took place in his world.
-    3. A mem0 memories database.
+    3. A MEMORY.md file containing continuously updated memory of the NPC.
 
     Input:
     A player can talk to the NPC either via text or audio.
@@ -35,7 +35,7 @@ class NPC:
 
     def _update_memory(self, conversation: list[dict]) -> None:
         """
-        Updates the mem0 memories database.
+        Updates the MEMORY.md file using the LLM.
 
         :param conversation: The messages of the last completed conversation between the player
         and the NPC. The conversation parameter is a OpenAI compliant messages list.
