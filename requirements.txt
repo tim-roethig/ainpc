@@ -1,3 +1,5 @@
+pylint
+
 mem0ai
 google-genai
 opencv-python
