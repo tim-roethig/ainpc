@@ -8,5 +8,8 @@ if __name__ == "__main__":
 
     npc = NPC(model_api_key=os.environ["API_KEY"], language="german")
 
-    npc.respond_to_text()
-
+    conversation = []
+    while True:
+        player_input = input()
+        conversation = npc.respond_to_text(player_input=player_input, conversation=conversation)
+        print(conversation)
