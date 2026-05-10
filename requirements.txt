@@ -1,4 +1,5 @@
 pylint
+python-dotenv
 
 mem0ai
 google-genai
@@ -6,4 +7,6 @@ opencv-python
 pyaudio
 pillow
 mss
-python-dotenv
+sounddevice
+numpy
+pyyaml
