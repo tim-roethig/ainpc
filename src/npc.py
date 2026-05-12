@@ -1,3 +1,5 @@
+"""NPC backed by the Gemini Live API for real-time voice conversations."""
+
 import asyncio
 import json
 import yaml
@@ -62,7 +64,7 @@ class NPC:
         # transcript of the most recent conversation
         self.transcript: str = ""
 
-        with open(self.agent_yaml_path, "r") as yaml_file:
+        with open(self.agent_yaml_path, "r", encoding="utf-8") as yaml_file:
             self.agent_data = yaml.safe_load(yaml_file) or {}
 
     def _create_system_prompt(self) -> str:
@@ -75,7 +77,7 @@ class NPC:
 
         :return: Markdown-formatted system prompt string.
         """
-        with open(self.agent_yaml_path, "r") as yaml_file:
+        with open(self.agent_yaml_path, "r", encoding="utf-8") as yaml_file:
             agent_data = yaml.safe_load(yaml_file) or {}
 
         rendered_sections: list[str] = []
@@ -142,10 +144,10 @@ Guidelines:
 
         new_memory = json.loads(self._t2t_generate(prompt=update_prompt))["memories"]
 
-        with open(self.agent_yaml_path, "r") as f:
+        with open(self.agent_yaml_path, "r", encoding="utf-8") as f:
             data = yaml.safe_load(f)
         data["memory"]["content"] = new_memory
-        with open(self.agent_yaml_path, "w") as f:
+        with open(self.agent_yaml_path, "w", encoding="utf-8") as f:
             yaml.safe_dump(data, f, default_flow_style=False, sort_keys=False)
 
     def _update_events(self, event: dict[str, str]) -> None:
@@ -154,7 +156,6 @@ Guidelines:
 
         :param event: Dict with keys `time`, `location`, `event_description`.
         """
-        pass
 
     def give_item(self, item_name: str) -> dict:
         """Hand an item to the player. Stub for now."""
