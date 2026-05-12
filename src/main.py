@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 
 from npc import NPC
 
+
 async def main():
     load_dotenv("../secrets.env")
 
@@ -22,6 +23,7 @@ async def main():
 
     # The conversation is over and `npc.transcript` is fully populated.
     npc._update_memory(npc.transcript)
+
 
 if __name__ == "__main__":
     asyncio.run(main())

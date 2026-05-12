@@ -1,5 +1,6 @@
 pylint
 python-dotenv
+black
 
 mem0ai
 google-genai

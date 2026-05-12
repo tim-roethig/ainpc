@@ -30,10 +30,10 @@ class NPC:
     _AUDIO_STREAM_FINISHED = object()
 
     def __init__(
-            self,
-            api_key: str,
-            model_name: str = "models/gemini-3.1-flash-live-preview",
-            agent_yaml_path: str = "./test_npc/AGENT.yaml",
+        self,
+        api_key: str,
+        model_name: str = "models/gemini-3.1-flash-live-preview",
+        agent_yaml_path: str = "./test_npc/AGENT.yaml",
     ):
         """
         Configure the NPC. No network or audio resources are acquired here;
@@ -197,9 +197,7 @@ Guidelines:
             response_modalities=[types.Modality.AUDIO],
             speech_config=types.SpeechConfig(
                 voice_config=types.VoiceConfig(
-                    prebuilt_voice_config=types.PrebuiltVoiceConfig(
-                        voice_name="Iapetus"
-                    )
+                    prebuilt_voice_config=types.PrebuiltVoiceConfig(voice_name="Iapetus")
                 )
             ),
             # Ask the server to send a text transcript of its own audio output.
@@ -208,7 +206,7 @@ Guidelines:
             output_audio_transcription=types.AudioTranscriptionConfig(),
             thinking_config=types.ThinkingConfig(thinking_level="minimal"),
             system_instruction=self._create_system_prompt(),
-            tools=[give_item_tool]
+            tools=[give_item_tool],
         )
 
         # `client.aio.live.connect(...)` returns an async context manager.
@@ -253,9 +251,7 @@ Guidelines:
                     next_audio_chunk,
                 )
 
-        self.audio_playback_task = asyncio.create_task(
-            play_audio_chunks_until_finished()
-        )
+        self.audio_playback_task = asyncio.create_task(play_audio_chunks_until_finished())
         return self
 
     async def __aexit__(self, exception_type, exception_value, exception_traceback) -> None:
@@ -277,7 +273,9 @@ Guidelines:
             try:
                 # Close the websocket via the same context manager we opened.
                 await self._live_session_context_manager.__aexit__(
-                    exception_type, exception_value, exception_traceback,
+                    exception_type,
+                    exception_value,
+                    exception_traceback,
                 )
             finally:
                 # `stop()` blocks until the speaker buffer empties; only then
@@ -333,10 +331,7 @@ Guidelines:
                 continue
 
             # Streamed text transcript of the NPC's spoken reply.
-            if (
-                server_content.output_transcription
-                and server_content.output_transcription.text
-            ):
+            if server_content.output_transcription and server_content.output_transcription.text:
                 transcript_text_chunk = server_content.output_transcription.text
                 response_text_chunks.append(transcript_text_chunk)
                 # Echo to stdout immediately so the user sees the reply being
@@ -347,16 +342,11 @@ Guidelines:
             # gets queued for the playback task to write to the speaker.
             if server_content.model_turn and server_content.model_turn.parts:
                 for model_turn_part in server_content.model_turn.parts:
-                    if (
-                        model_turn_part.inline_data
-                        and model_turn_part.inline_data.data
-                    ):
+                    if model_turn_part.inline_data and model_turn_part.inline_data.data:
                         # Non-blocking enqueue keeps this receive loop fast,
                         # which matters because falling behind here causes
                         # backpressure on the websocket.
-                        self.audio_playback_queue.put_nowait(
-                            model_turn_part.inline_data.data
-                        )
+                        self.audio_playback_queue.put_nowait(model_turn_part.inline_data.data)
 
             # Server signals that the model is done speaking for this turn.
             # Audio queued before this point may still be playing; that's
