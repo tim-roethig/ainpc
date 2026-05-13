@@ -150,13 +150,6 @@ Guidelines:
         with open(self.agent_yaml_path, "w", encoding="utf-8") as f:
             yaml.safe_dump(data, f, default_flow_style=False, sort_keys=False)
 
-    def _update_events(self, event: dict[str, str]) -> None:
-        """
-        Append a new event to EVENTS.md. Stub for now.
-
-        :param event: Dict with keys `time`, `location`, `event_description`.
-        """
-
     def give_item(self, item_name: str) -> dict:
         """Hand an item to the player. Stub for now."""
         print(f"gave {item_name=}")
