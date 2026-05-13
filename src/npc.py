@@ -6,7 +6,6 @@ import yaml
 import sounddevice
 from google import genai
 
-
 GIVE_ITEM_TOOL = {
     "function_declarations": [
         {
@@ -111,6 +110,7 @@ class NPC:
         return response.text
 
     def _update_memory(self, transcript: str) -> None:
+        print("Updating memories...")
         existing_memories = self.agent_data["memory"]["content"] or []
         old_memory = (
             "\n".join(f"- {item}" for item in existing_memories)
@@ -145,7 +145,7 @@ Guidelines:
         with open(self.agent_yaml_path, "w", encoding="utf-8") as yaml_file:
             yaml.safe_dump(self.agent_data, yaml_file, default_flow_style=False, sort_keys=False)
 
-    def give_item(self, item_name: str) -> dict:
+    async def give_item(self, item_name: str) -> dict:
         """Hand an item to the player. Stub for now."""
         print(f"gave {item_name=}")
         return {"status": "ok", "item_name": item_name}
@@ -236,7 +236,7 @@ Guidelines:
                 function_responses = []
                 for function_call in live_server_message.tool_call.function_calls:
                     if function_call.name == "give_item":
-                        result = self.give_item(**(function_call.args or {}))
+                        result = await self.give_item(**(function_call.args or {}))
                         function_responses.append({
                             "id": function_call.id,
                             "name": function_call.name,
